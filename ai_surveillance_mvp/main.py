@@ -8,10 +8,10 @@ import cv2
 import time
 import numpy as np
 from datetime import datetime
-from detector import ThreatDetector
+from detector import ThreatDetector     
 from blur_faces import FaceBlurrer
 from alert import AlertSystem
-from config import Config
+from config import Config 
 
 class SurveillancePipeline:
     def __init__(self):
