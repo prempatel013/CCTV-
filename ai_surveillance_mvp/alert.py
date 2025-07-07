@@ -1,4 +1,4 @@
-   #!/usr/bin/env python3
+#!/usr/bin/env python3
 """
 Alert System Module
 Sends notifications via Twilio SMS/WhatsApp with threat snapshots
@@ -28,10 +28,11 @@ class AlertSystem:
             from twilio.base.exceptions import TwilioException
             
             # These would be set as environment variables in production
-            account_sid = os.getenv('TWILIO_ACCOUNT_SID')
-            auth_token = os.getenv('TWILIO_AUTH_TOKEN')
-            from_number = os.getenv('TWILIO_FROM_NUMBER')
-            to_number = os.getenv('TWILIO_TO_NUMBER')
+            # PLACEHOLDER: Insert your Twilio credentials here or set as environment variables
+            account_sid = os.getenv('TWILIO_ACCOUNT_SID', 'YOUR_TWILIO_ACCOUNT_SID')  # PLACEHOLDER
+            auth_token = os.getenv('TWILIO_AUTH_TOKEN', 'YOUR_TWILIO_AUTH_TOKEN')    # PLACEHOLDER
+            from_number = os.getenv('TWILIO_FROM_NUMBER', '+1234567890')             # PLACEHOLDER
+            to_number = os.getenv('TWILIO_TO_NUMBER', '+0987654321')                 # PLACEHOLDER
             
             if all([account_sid, auth_token, from_number, to_number]):
                 self.twilio_client = Client(account_sid, auth_token)

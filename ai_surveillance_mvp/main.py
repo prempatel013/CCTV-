@@ -14,13 +14,16 @@ from alert import AlertSystem
 from config import Config 
 
 class SurveillancePipeline:
-    def __init__(self):
+    def __init__(self, model_path: str = 'yolov8m.pt', confidence_threshold: float = 0.5, class_thresholds: dict = None):
         self.config = Config()
-        self.detector = ThreatDetector()
+        self.detector = ThreatDetector(model_path=model_path, confidence_threshold=confidence_threshold, class_thresholds=class_thresholds)
         self.face_blurrer = FaceBlurrer()
         self.alert_system = AlertSystem()
         self.frame_count = 0
         self.last_alert_time = 0
+        # Placeholder: Initialize tracker and zone config here
+        self.tracker = None  # TODO: Integrate DeepSORT or similar
+        self.zones = []      # TODO: Define restricted zones for zone-based detection
         
     def process_frame(self, frame):
         """Process a single frame through the surveillance pipeline"""
@@ -28,6 +31,15 @@ class SurveillancePipeline:
         
         # Step 1: Detect threats
         threats, boxes, scores = self.detector.detect(frame)
+        
+        # Step 1b: (Optional) Track objects (placeholder)
+        # if self.tracker:
+        #     tracked_objects = self.tracker.update(boxes, threats)
+        
+        # Step 1c: (Optional) Zone-based detection (placeholder)
+        # for box in boxes:
+        #     if self._is_in_zone(box):
+        #         ...
         
         # Step 2: Blur non-threat faces for privacy
         processed_frame = self.face_blurrer.blur_faces(frame, threats, boxes)

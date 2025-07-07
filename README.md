@@ -6,8 +6,11 @@ A real-time intelligent surveillance system using mobile camera footage to simul
 
 ### Real-Time Threat Detection
 - **YOLOv8 Integration**: Advanced object detection for people, fire, smoke, and suspicious objects
+- **Model Selection**: Easily switch between YOLOv8 variants (nano, small, medium, large) or use custom-trained models
+- **Per-Class Thresholds**: Configure detection confidence per class for higher accuracy
 - **Demo Mode**: Fallback simulation when YOLOv8 is not available
 - **After-Hours Intrusion**: Special detection logic for restricted time periods (10 PM - 6 AM)
+- **Advanced Features (Extensible)**: Placeholders for object tracking (e.g., DeepSORT) and zone-based detection
 
 ### Privacy Protection
 - **Face Blurring**: Automatically blurs faces of non-threat individuals
@@ -99,6 +102,11 @@ Modify `config.py` to adjust:
 
 ## 🔧 Technical Details
 
+### Detection Model
+- **Model Path**: Easily specify which YOLOv8 model to use (e.g., yolov8n.pt, yolov8m.pt, yolov8l.pt, or custom weights)
+- **Per-Class Thresholds**: Set different confidence thresholds for each class
+- **Extensible**: Codebase is ready for object tracking and zone-based detection integration
+
 ### Detection Classes
 - **person**: Human detection (high priority during after-hours)
 - **fire**: Fire detection (highest priority)
@@ -136,10 +144,11 @@ Modify `config.py` to adjust:
 
 ## 🛠️ Development
 
-### Adding New Threat Types
-1. Update `target_classes` in `detector.py`
+### Adding New Threat Types & Advanced Features
+1. Update `target_classes` and `class_thresholds` in `detector.py`
 2. Add priority mapping in `config.py`
 3. Update alert logic as needed
+4. (Optional) Integrate object tracking or zone-based detection in `main.py`
 
 ### Custom Video Sources
 ```python
@@ -157,6 +166,12 @@ pipeline.run(1)  # Second camera
 - Use `yolov8n.pt` for speed (nano model)
 - Adjust `detection_interval` in config
 - Reduce frame resolution for faster processing
+
+### Upgrading Detection
+- Change the model path in `main.py` or `detector.py` to use a more accurate YOLOv8 model
+- Set per-class thresholds for fine-grained control
+- Add or remove target classes as needed
+- Integrate tracking or zone logic in the pipeline (see TODOs in `main.py`)
 
 ## 🚨 Alert Examples
 
@@ -220,6 +235,10 @@ pip install opencv-python
 - Reduce frame resolution in `config.py`
 - Use smaller YOLO model
 - Increase `detection_interval`
+
+**Model not accurate enough**
+- Use a larger YOLOv8 model (e.g., yolov8m.pt or yolov8l.pt)
+- Adjust per-class thresholds in `main.py` or `detector.py`
 
 ---
 

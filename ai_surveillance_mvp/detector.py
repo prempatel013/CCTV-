@@ -10,11 +10,19 @@ import time
 from typing import List, Tuple, Optional
 
 class ThreatDetector:
-    def __init__(self):
+    def __init__(self, model_path: str = 'yolov8m.pt', confidence_threshold: float = 0.5, class_thresholds: Optional[dict] = None):
+        """
+        Args:
+            model_path (str): Path to YOLOv8 model (default: yolov8m.pt for better accuracy)
+            confidence_threshold (float): Default detection confidence threshold
+            class_thresholds (dict): Optional per-class confidence thresholds
+        """
         self.model = None
         self.current_threats = []
-        self.confidence_threshold = 0.5
+        self.confidence_threshold = confidence_threshold
+        self.class_thresholds = class_thresholds or {}
         self.target_classes = ['person', 'fire', 'smoke', 'backpack', 'handbag', 'suitcase']
+        self.model_path = model_path
         
         # Try to load YOLOv8 model, fallback to demo mode
         self.load_model()
@@ -23,8 +31,8 @@ class ThreatDetector:
         """Load YOLOv8 model with fallback to demo mode"""
         try:
             from ultralytics import YOLO
-            print("Loading YOLOv8 model...")
-            self.model = YOLO('yolov8n.pt')  # Use nano model for speed
+            print(f"Loading YOLOv8 model from {self.model_path} ...")
+            self.model = YOLO(self.model_path)
             print("YOLOv8 model loaded successfully!")
         except ImportError:
             print("Ultralytics not available - running in DEMO MODE")
@@ -46,7 +54,7 @@ class ThreatDetector:
             return self._detect_demo(frame)
     
     def _detect_with_yolo(self, frame: np.ndarray) -> Tuple[List[str], List[Tuple[int, int, int, int]], List[float]]:
-        """Real YOLOv8 detection"""
+        """Real YOLOv8 detection with per-class threshold support"""
         results = self.model(frame, verbose=False)
         
         threats = []
@@ -56,22 +64,16 @@ class ThreatDetector:
         for result in results:
             if result.boxes is not None:
                 for box in result.boxes:
-                    # Get class name and confidence
                     class_id = int(box.cls[0])
                     confidence = float(box.conf[0])
-                    
-                    if confidence < self.confidence_threshold:
-                        continue
-                    
-                    # Get class name
                     class_name = result.names[class_id]
-                    
-                    # Only process target classes
+                    # Use per-class threshold if available
+                    threshold = self.class_thresholds.get(class_name, self.confidence_threshold)
+                    if confidence < threshold:
+                        continue
                     if class_name in self.target_classes:
-                        # Get bounding box coordinates
                         x1, y1, x2, y2 = box.xyxy[0].cpu().numpy()
                         x1, y1, x2, y2 = int(x1), int(y1), int(x2), int(y2)
-                        
                         threats.append(class_name)
                         boxes.append((x1, y1, x2, y2))
                         scores.append(confidence)
