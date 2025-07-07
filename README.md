@@ -40,7 +40,7 @@ pip install -r requirements.txt
 
 3. **Run the surveillance system:**
 ```bash
-python main.py
+python main.py   
 ```
 
 ### Demo Mode
