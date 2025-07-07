@@ -1,0 +1,26 @@
+# AI Surveillance MVP - Requirements
+# Core dependencies for the surveillance system
+
+# Computer Vision
+opencv-python>=4.8.0
+numpy>=1.24.0
+
+# AI/ML - YOLOv8 for object detection
+ultralytics>=8.0.0
+
+# Communication - Twilio for alerts
+twilio>=8.0.0
+
+# Optional: For enhanced face detection
+# dlib>=19.24.0  # Uncomment if you want to use DLib for better face detection
+
+# Development and testing
+pytest>=7.0.0
+black>=23.0.0  # Code formatting
+flake8>=6.0.0  # Linting
+
+# For video processing (optional)
+# ffmpeg-python>=0.2.0  # Uncomment if you need advanced video processing
+
+# For logging and monitoring
+python-dotenv>=1.0.0  # Environment variable management 
